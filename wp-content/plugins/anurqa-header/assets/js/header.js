@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   Anurqa Optical — Header JS v2 (Vanilla, No jQuery)
+   Anura Optical — Header JS v2 (Vanilla, No jQuery)
    ═══════════════════════════════════════════════════ */
 (function () {
     'use strict';
@@ -317,6 +317,62 @@
     function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     /* ═══════════════════════════════════════
+       7) HIDE ON SCROLL DOWN, SHOW ON SCROLL UP
+       ═══════════════════════════════════════ */
+    function initScrollBehavior() {
+        var wrap = $('.anurqa-header--sticky');
+        if (!wrap) return;
+
+        var desktop = $('.anurqa-header--desktop', wrap);
+        var mobile = $('.anurqa-header--mobile', wrap);
+        var headers = [desktop, mobile].filter(Boolean);
+        if (headers.length === 0) return;
+
+        // Add spacer
+        if (!wrap.nextElementSibling || !wrap.nextElementSibling.classList.contains('anurqa-header-spacer')) {
+            var spacer = document.createElement('div');
+            spacer.className = 'anurqa-header-spacer';
+            wrap.parentNode.insertBefore(spacer, wrap.nextSibling);
+        }
+
+        var lastY = 0;
+        var ticking = false;
+
+        function update() {
+            var y = window.scrollY || window.pageYOffset;
+
+            if (y <= 10) {
+                // At top — always show, no extra shadow
+                headers.forEach(function (h) {
+                    h.classList.remove('anurqa-hidden', 'anurqa-visible');
+                });
+            } else if (y > lastY) {
+                // Scrolling DOWN — hide
+                headers.forEach(function (h) {
+                    h.classList.add('anurqa-hidden');
+                    h.classList.remove('anurqa-visible');
+                });
+            } else {
+                // Scrolling UP — show with shadow
+                headers.forEach(function (h) {
+                    h.classList.remove('anurqa-hidden');
+                    h.classList.add('anurqa-visible');
+                });
+            }
+
+            lastY = y;
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', function () {
+            if (!ticking) {
+                requestAnimationFrame(update);
+                ticking = true;
+            }
+        }, { passive: true });
+    }
+
+    /* ═══════════════════════════════════════
        INIT
        ═══════════════════════════════════════ */
     function init() {
@@ -325,6 +381,7 @@
         initDrawer();
         initCartBadge();
         initMobileSearch();
+        initScrollBehavior();
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

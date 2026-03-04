@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   Anurqa Optical — Custom Header v2
+   Anura Optical — Custom Header v2
    3-col mega menus, product thumbs, stores/home layout
    ═══════════════════════════════════════════════════ */
 
@@ -34,12 +34,30 @@
 .anurqa-header-wrap img { max-width: 100%; height: auto; }
 
 /* ═══════════════════════════════════════
-   STICKY
+   FIXED HEADER — hide on scroll down, show on scroll up
    ═══════════════════════════════════════ */
 .anurqa-header--sticky .anurqa-header--desktop,
 .anurqa-header--sticky .anurqa-header--mobile {
-    position: sticky; top: 0; z-index: 99990;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 99990;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+/* Hidden state (scrolling down) */
+.anurqa-header--sticky .anurqa-header--desktop.anurqa-hidden,
+.anurqa-header--sticky .anurqa-header--mobile.anurqa-hidden {
+    transform: translateY(-100%);
+}
+
+/* Visible state (scrolling up) — add shadow so it feels like it's floating */
+.anurqa-header--sticky .anurqa-header--desktop.anurqa-visible,
+.anurqa-header--sticky .anurqa-header--mobile.anurqa-visible {
+    transform: translateY(0);
+    box-shadow: var(--anurqa-shadow);
+}
+
+/* Spacer prevents content jumping behind fixed header */
+.anurqa-header-spacer { height: var(--anurqa-header-h); }
+
 .admin-bar .anurqa-header--sticky .anurqa-header--desktop,
 .admin-bar .anurqa-header--sticky .anurqa-header--mobile { top: 32px; }
 @media (max-width: 782px) {

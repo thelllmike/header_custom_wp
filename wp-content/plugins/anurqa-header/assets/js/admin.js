@@ -1,4 +1,4 @@
-/* Anurqa Header — Admin (Logo + Image Uploads) */
+/* Anura Header — Admin (Logo + Image Uploads) */
 (function () {
     'use strict';
 
@@ -226,7 +226,7 @@
                         "title": "Stores",
                         "url": "/stores/",
                         "type": "store",
-                        "heading": "Find our Anurqa Optical Store",
+                        "heading": "Find our Anura Optical Store",
                         "locations": [
                             {"name": "Pettah", "emoji": "\ud83c\udfdb", "url": "/stores/pettah/"}
                         ],

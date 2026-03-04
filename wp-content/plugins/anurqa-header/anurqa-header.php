@@ -1,17 +1,17 @@
 <?php
 /**
- * Plugin Name: Anurqa Optical - Custom Header
- * Plugin URI: https://anurqaoptical.com
+ * Plugin Name: Anura Optical - Custom Header
+ * Plugin URI: https://anuraoptical.com
  * Description: Lenskart-style custom navigation header with mega menu, mobile drawer, and admin settings for logo upload. Built for Sri Lanka.
- * Version: 2.0.2
- * Author: Anurqa Optical
+ * Version: 2.0.7
+ * Author: Anura Optical
  * License: GPL v2 or later
  * Text Domain: anurqa-header
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'ANURQA_HEADER_VERSION', '2.0.2' );
+define( 'ANURQA_HEADER_VERSION', '2.0.7' );
 define( 'ANURQA_HEADER_PATH', plugin_dir_path( __FILE__ ) );
 define( 'ANURQA_HEADER_URL', plugin_dir_url( __FILE__ ) );
 
@@ -28,8 +28,8 @@ class Anurqa_Header_Settings {
 
     public function add_menu() {
         add_menu_page(
-            'Anurqa Header Settings',
-            'Anurqa Header',
+            'Anura Header Settings',
+            'Anura Header',
             'manage_options',
             'anurqa-header',
             [ $this, 'settings_page' ],
@@ -78,7 +78,7 @@ class Anurqa_Header_Settings {
         $home_image    = get_option( 'anurqa_header_home_image', '' );
         ?>
         <div class="wrap anurqa-admin-wrap">
-            <h1>Anurqa Header Settings</h1>
+            <h1>Anura Header Settings</h1>
             <form method="post" action="options.php">
                 <?php settings_fields( 'anurqa_header_group' ); ?>
 
@@ -270,20 +270,20 @@ class Anurqa_Header_Frontend {
         $s = $this->settings;
         $sticky_class = $s['sticky'] === '1' ? ' anurqa-header--sticky' : '';
         $logo_html = $s['logo']
-            ? '<img src="' . esc_url( $s['logo'] ) . '" alt="Anurqa Optical" class="anurqa-logo-img">'
-            : '<span class="anurqa-logo-text">Anurqa Optical</span>';
+            ? '<img src="' . esc_url( $s['logo'] ) . '" alt="Anura Optical" class="anurqa-logo-img">'
+            : '<span class="anurqa-logo-text">Anura Optical</span>';
 
         $menu_items = $this->get_menu_items();
         ?>
 
-        <!-- Anurqa Header Plugin v2 -->
+        <!-- Anura Header Plugin v2 -->
         <div class="anurqa-header-wrap<?php echo esc_attr( $sticky_class ); ?>">
 
             <!-- ══ DESKTOP HEADER ══ -->
             <header class="anurqa-header anurqa-header--desktop" role="banner">
                 <div class="anurqa-container">
 
-                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="anurqa-logo" aria-label="Anurqa Optical Home">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="anurqa-logo" aria-label="Anura Optical Home">
                         <?php echo $logo_html; ?>
                     </a>
 
@@ -317,7 +317,7 @@ class Anurqa_Header_Frontend {
                                             <?php endif; ?>
                                         </div>
                                         <div class="anurqa-mega--split-content">
-                                            <h3><?php echo esc_html( $item['heading'] ?? 'Find your nearest Anurqa Store' ); ?></h3>
+                                            <h3><?php echo esc_html( $item['heading'] ?? 'Find your nearest Anura Optical Store' ); ?></h3>
                                             <?php if ( ! empty( $item['locations'] ) ) : ?>
                                             <div class="anurqa-mega__locations">
                                                 <?php foreach ( $item['locations'] as $loc ) : ?>
@@ -465,7 +465,7 @@ class Anurqa_Header_Frontend {
                 <button class="anurqa-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="anurqa-drawer">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 </button>
-                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="anurqa-logo" aria-label="Anurqa Optical Home">
+                <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="anurqa-logo" aria-label="Anura Optical Home">
                     <?php echo $logo_html; ?>
                 </a>
                 <div class="anurqa-mobile-actions">
@@ -526,7 +526,7 @@ class Anurqa_Header_Frontend {
             </div>
 
         </div>
-        <!-- /Anurqa Header Plugin v2 -->
+        <!-- /Anura Header Plugin v2 -->
         <?php
     }
 
@@ -766,7 +766,7 @@ class Anurqa_Header_Frontend {
                 'title'     => 'Stores',
                 'url'       => '/stores/',
                 'type'      => 'store',
-                'heading'   => 'Find our Anurqa Optical Store',
+                'heading'   => 'Find our Anura Optical Store',
                 'locations' => [
                     [ 'name' => 'Pettah', 'emoji' => '🏛', 'url' => '/stores/pettah/' ],
                 ],
@@ -799,7 +799,7 @@ if ( ! is_admin() ) {
 
 add_action( 'init', function() {
     register_nav_menus([
-        'anurqa-header' => 'Anurqa Header Menu',
+        'anurqa-header' => 'Anura Header Menu',
     ]);
 });
 
