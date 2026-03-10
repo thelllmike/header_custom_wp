@@ -288,14 +288,20 @@ while ( have_posts() ) :
             <div class="apv-how-section__inner">
                 <h3 class="apv-info__label apv-info__label--large">How to Buy Your Glasses</h3>
                 <div class="apv-how-to-buy">
-                    <?php foreach ( $htb_cards as $card ) : ?>
-                    <div class="apv-how-card">
+                    <?php foreach ( $htb_cards as $card ) :
+                        $ext = $card['image'] ? strtolower( pathinfo( $card['image'], PATHINFO_EXTENSION ) ) : '';
+                        $is_video = in_array( $ext, [ 'mp4', 'webm', 'mov' ] );
+                    ?>
+                    <div class="apv-how-card <?php echo $is_video ? 'apv-how-card--video' : ''; ?>"
+                        <?php if ( $is_video ) : ?>
+                        data-video-src="<?php echo esc_url( $card['image'] ); ?>"
+                        data-video-title="<?php echo esc_attr( $card['title'] ); ?>"
+                        <?php endif; ?>
+                    >
                         <?php if ( $card['image'] ) : ?>
                         <div class="apv-how-card__media">
-                            <?php
-                            $ext = strtolower( pathinfo( $card['image'], PATHINFO_EXTENSION ) );
-                            if ( in_array( $ext, [ 'mp4', 'webm', 'mov' ] ) ) : ?>
-                                <video src="<?php echo esc_url( $card['image'] ); ?>" muted loop playsinline preload="metadata"></video>
+                            <?php if ( $is_video ) : ?>
+                                <video src="<?php echo esc_url( $card['image'] ); ?>" muted playsinline preload="metadata"></video>
                             <?php else : ?>
                                 <img src="<?php echo esc_url( $card['image'] ); ?>" alt="<?php echo esc_attr( $card['title'] ); ?>">
                             <?php endif; ?>
@@ -427,6 +433,31 @@ while ( have_posts() ) :
                 <button type="button" class="apv-sticky-cta__btn apv-select-lenses-trigger" style="background: <?php echo esc_attr( $settings['cta_color'] ); ?>;">
                     <?php echo esc_html( $settings['cta_text'] ); ?>
                 </button>
+            </div>
+        </div>
+
+        <!-- How-to-Buy Video Modal -->
+        <div class="apv-video-modal" id="apv-video-modal" style="display:none;">
+            <div class="apv-video-modal__overlay"></div>
+            <div class="apv-video-modal__content">
+                <div class="apv-video-modal__header">
+                    <img src="<?php echo esc_url( get_site_icon_url( 32 ) ); ?>" alt="" class="apv-video-modal__logo">
+                    <span class="apv-video-modal__title" id="apv-video-modal-title"></span>
+                    <button class="apv-video-modal__close" aria-label="Close">&times;</button>
+                </div>
+                <div class="apv-video-modal__player">
+                    <video id="apv-video-modal-player" playsinline preload="metadata"></video>
+                    <div class="apv-video-modal__controls">
+                        <span class="apv-video-modal__time" id="apv-video-modal-time">00:00</span>
+                        <input type="range" class="apv-video-modal__progress" id="apv-video-modal-progress" min="0" max="100" value="0">
+                        <button class="apv-video-modal__mute" id="apv-video-modal-mute" aria-label="Toggle mute">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path class="apv-mute-x" d="M23 9l-6 6M17 9l6 6"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="apv-video-modal__footer">
+                    <a href="<?php echo esc_url( home_url( '/shop/' ) ); ?>" class="apv-video-modal__cta">Shop Now</a>
+                </div>
             </div>
         </div>
 

@@ -587,11 +587,21 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.apv-how-card:hover {
+    transform: translateY(-3px);
+}
+
+.apv-how-card--video {
+    cursor: pointer;
 }
 
 .apv-how-card__media {
     width: 100%;
-    height: 160px;
+    aspect-ratio: 9 / 16;
     overflow: hidden;
     position: relative;
 }
@@ -610,6 +620,18 @@
     flex-direction: column;
     gap: 4px;
     flex: 1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    z-index: 2;
+}
+
+/* Cards without video — keep text below */
+.apv-how-card:not(.apv-how-card--video) .apv-how-card__inner {
+    position: static;
+    background: none;
 }
 
 .apv-how-card__inner span {
@@ -641,6 +663,179 @@
 .apv-how-card:not(:has(.apv-how-card__media)) .apv-how-card__inner {
     min-height: 180px;
     padding: 20px 16px;
+    position: static;
+    background: none;
+}
+
+/* ════════════════════════════════════════════
+   HOW-TO-BUY VIDEO MODAL (Lenskart-style)
+   ════════════════════════════════════════════ */
+.apv-video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.apv-video-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+}
+
+.apv-video-modal__content {
+    position: relative;
+    width: min(420px, 92vw);
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.apv-video-modal__header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #111;
+    color: #fff;
+}
+
+.apv-video-modal__logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    object-fit: contain;
+}
+
+.apv-video-modal__title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.apv-video-modal__close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.apv-video-modal__close:hover {
+    opacity: 1;
+}
+
+.apv-video-modal__player {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    background: #000;
+}
+
+.apv-video-modal__player video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.apv-video-modal__controls {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.apv-video-modal__time {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    min-width: 38px;
+}
+
+.apv-video-modal__progress {
+    flex: 1;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.apv-video-modal__progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+}
+
+.apv-video-modal__mute {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.apv-video-modal__mute:hover {
+    opacity: 1;
+}
+
+.apv-video-modal__mute .apv-mute-x {
+    display: block;
+}
+
+.apv-video-modal__mute.apv-unmuted .apv-mute-x {
+    display: none;
+}
+
+.apv-video-modal__footer {
+    padding: 16px 20px 20px;
+    background: #fff;
+}
+
+.apv-video-modal__cta {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    background: #fff;
+    color: #222;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.apv-video-modal__cta:hover {
+    background: #222;
+    color: #fff;
 }
 
 /* ════════════════════════════════════════════

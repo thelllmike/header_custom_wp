@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════
-   Anura Product View — Frontend JS  v1.6.0
+   Anura Product View — Frontend JS  v1.7.0
    ═══════════════════════════════════════════════════ */
 (function () {
     'use strict';
@@ -399,16 +399,165 @@
     }
 
     /* ═══════════════════════════════════════
-       INIT
-       ═══════════════════════════════════════ */
-    /* ═══════════════════════════════════════
-       11) HOW-TO-BUY CARD VIDEO HOVER
+       11) HOW-TO-BUY CARDS — auto-play + video modal
        ═══════════════════════════════════════ */
     function initHowToCards() {
-        $$('.apv-how-card__media video').forEach(function (video) {
-            var card = video.closest('.apv-how-card');
-            card.addEventListener('mouseenter', function () { video.play(); });
-            card.addEventListener('mouseleave', function () { video.pause(); video.currentTime = 0; });
+        var videoCards = $$('.apv-how-card--video');
+        var videos = [];
+        videoCards.forEach(function (card) {
+            var v = card.querySelector('video');
+            if (v) videos.push(v);
+        });
+
+        if (videos.length === 0) return;
+
+        var currentIndex = 0;
+        var autoTimer = null;
+        var hoverPaused = false;
+
+        function pauseAllExcept(except) {
+            videos.forEach(function (v) {
+                if (v !== except && !v.paused) {
+                    v.pause();
+                    v.currentTime = 0;
+                }
+            });
+        }
+
+        function playIndex(idx) {
+            if (hoverPaused) return;
+            var video = videos[idx];
+            if (!video) return;
+            pauseAllExcept(video);
+            var p = video.play();
+            if (p) p.catch(function () {});
+        }
+
+        function scheduleNext(delay) {
+            clearTimeout(autoTimer);
+            autoTimer = setTimeout(function () {
+                if (hoverPaused) return;
+                playIndex(currentIndex);
+            }, delay);
+        }
+
+        // When a video ends, advance to next
+        videos.forEach(function (video, idx) {
+            video.addEventListener('ended', function () {
+                video.currentTime = 0;
+                currentIndex = (idx + 1) % videos.length;
+                scheduleNext(1500);
+            });
+        });
+
+        // Hover: play on enter, reset on leave
+        videoCards.forEach(function (card, idx) {
+            var video = videos[idx];
+            if (!video) return;
+
+            card.addEventListener('mouseenter', function () {
+                hoverPaused = true;
+                clearTimeout(autoTimer);
+                pauseAllExcept(video);
+                var p = video.play();
+                if (p) p.catch(function () {});
+            });
+
+            card.addEventListener('mouseleave', function () {
+                hoverPaused = false;
+                video.pause();
+                video.currentTime = 0;
+                currentIndex = (idx + 1) % videos.length;
+                scheduleNext(2000);
+            });
+        });
+
+        // Click: open video modal
+        videoCards.forEach(function (card) {
+            card.addEventListener('click', function (e) {
+                e.preventDefault();
+                var src = card.getAttribute('data-video-src');
+                var title = card.getAttribute('data-video-title');
+                if (src) openVideoModal(src, title);
+            });
+        });
+
+        // Start auto-play after 2s
+        scheduleNext(2000);
+
+        // ─── Video Modal ─────────────────────
+        var modal = $('#apv-video-modal');
+        if (!modal) return;
+
+        var overlay = modal.querySelector('.apv-video-modal__overlay');
+        var closeBtn = modal.querySelector('.apv-video-modal__close');
+        var modalVideo = $('#apv-video-modal-player');
+        var modalTitle = $('#apv-video-modal-title');
+        var timeDisplay = $('#apv-video-modal-time');
+        var progressBar = $('#apv-video-modal-progress');
+        var muteBtn = $('#apv-video-modal-mute');
+
+        function openVideoModal(src, title) {
+            videos.forEach(function (v) { v.pause(); v.currentTime = 0; });
+            hoverPaused = true;
+            clearTimeout(autoTimer);
+
+            modalTitle.textContent = title || '';
+            modalVideo.src = src;
+            modalVideo.muted = false;
+            muteBtn.classList.add('apv-unmuted');
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            var p = modalVideo.play();
+            if (p) p.catch(function () {
+                modalVideo.muted = true;
+                muteBtn.classList.remove('apv-unmuted');
+                modalVideo.play();
+            });
+        }
+
+        function closeVideoModal() {
+            modal.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.src = '';
+            document.body.style.overflow = '';
+            hoverPaused = false;
+            currentIndex = 0;
+            scheduleNext(2000);
+        }
+
+        closeBtn.addEventListener('click', closeVideoModal);
+        overlay.addEventListener('click', closeVideoModal);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                closeVideoModal();
+            }
+        });
+
+        modalVideo.addEventListener('timeupdate', function () {
+            var cur = modalVideo.currentTime;
+            var dur = modalVideo.duration || 0;
+            var mins = Math.floor(cur / 60);
+            var secs = Math.floor(cur % 60);
+            timeDisplay.textContent = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+            if (dur > 0) progressBar.value = (cur / dur) * 100;
+        });
+
+        progressBar.addEventListener('input', function () {
+            var dur = modalVideo.duration || 0;
+            if (dur > 0) modalVideo.currentTime = (progressBar.value / 100) * dur;
+        });
+
+        muteBtn.addEventListener('click', function () {
+            modalVideo.muted = !modalVideo.muted;
+            muteBtn.classList.toggle('apv-unmuted', !modalVideo.muted);
+        });
+
+        modalVideo.addEventListener('ended', function () {
+            modalVideo.currentTime = 0;
+            modalVideo.play();
         });
     }
 

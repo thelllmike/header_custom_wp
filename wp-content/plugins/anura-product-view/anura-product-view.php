@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Anura Product View
  * Description: Lenskart-style single product page for WooCommerce — image gallery, color/size selectors, delivery checker, trust badges, reviews, virtual try-on, wishlist.
- * Version:     1.6.0
+ * Version:     1.7.0
  * Author:      Anura Optical
  * Text Domain: anura-product-view
  * Requires Plugins: woocommerce
@@ -10,7 +10,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'APV_VERSION', '1.6.0' );
+define( 'APV_VERSION', '1.7.0' );
 define( 'APV_PATH',    plugin_dir_path( __FILE__ ) );
 define( 'APV_URL',     plugin_dir_url( __FILE__ ) );
 
